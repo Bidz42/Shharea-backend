@@ -1,0 +1,21 @@
+{
+  "name": "shharea-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bidz42/shharea-server.git"
+  },
+  "author": "Bidz42, Bdaoui",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bidz42/shharea-server/issues"
+  },
+  "homepage": "https://github.com/Bidz42/shharea-server#readme"
+}
