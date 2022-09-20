@@ -35,61 +35,40 @@ router.get("/images", (req, res) => {
 router.get("/image/:id", (req, res) => {
     const {id} = req.params
     Upload.findById(id)
-    .populate("owner")
-    // .populate(
-    //     path: "comments likes",
-    //     populate: {
-    //         path: "owner", 
-    //         model: "User",
-    //     },
-        // path: "likes",
-        // populate: {
-        //     path: "owner", //populate the review owner within the review model
-        //     model: "User",
-        // },
-    // })
+    .populate("owner likes")
+    .populate({
+        path: "comments",
+        populate: {
+            path: "owner", 
+            model: "User",
+        }
+        })
     .then((response) => res.status(200).json(response))
     .catch((err) => console.log(err))
 })
-
-// router.post("/image/comment", (req, res) => {
-//     const {owner, imageId, comment } = req.body;
-
-//     Comment.create({comment, owner})
-//     .then(res => { return Upload.updateOne ( {_id : imageId}, {$push: {comments : [res._id]}})
-//     return Upload.findById(imageId)
-//     .populate('comments owner')
-//         .populate({
-//             path: "comment",
-//             populate: {
-//                 path: "owner", 
-//                 model: "User",
-//             },
-//     })
-//     .then((response) => {
-//         console.log(response.comments)
-//         res.status(200).json(response)})
-//     .catch((err) => console.log(err))
-// });
 
 router.post(`/image/comment`, (req, res) =>{
     const {comment, owner, imageId} = req.body;
     Comment.create({comment, owner})
         .then(response => { return Upload.updateOne( {_id : imageId}, {$push: {comments : [response._id]}})})
-    return Upload.findById(imageId)
-        .populate('comments owner')
-        .populate({
-            path: "comments",
-            populate: {
-                path: "owner", //populate the review owner within the review model
-                model: "User",
-  },
-})
-        .then(response => {
-            console.log(response.comments)
-            res.status(200).json(response)})
+        .then(response => {res.status(200).json(response)})
         .catch((err) => console.log(err));
 });
 
+router.post(`/image/like`, (req, res) =>{
+    const {userId, imageId} = req.body;
+    
+    Upload.updateOne( {_id : imageId}, {$push: {likes : [userId]}})
+    .then((response) => {res.status(200).json(response)})
+    .catch((err) => console.log(err))
+
+
+
+
+    // Upload.create({comment, owner})
+    //     .then(response => { return Upload.updateOne( {_id : imageId}, {$push: {comments : [response._id]}})})
+    //     .then(response => {res.status(200).json(response)})
+    //     .catch((err) => console.log(err));
+});
 
 module.exports = router;
