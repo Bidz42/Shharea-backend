@@ -1,0 +1,35 @@
+for an email create asyn function something like this as defined in transported docs
+poort 465 istrue. eveyrhtin else false
+set own email n pass
+let details equal email body
+then .sendMail need to sed 
+
+        let transporter = nodemailer.createTransport({
+          sevice: "gmail",
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true, // true for 465, false for other ports
+          auth: {
+            user: "shh-area@gmail.com", // generated ethereal user
+            pass: "hi123hello456", // generated ethereal password
+          },
+        });
+  
+        let details = {
+          from: "shh-area@gmail.com",
+          to: email,
+          subject: "Welcome to SHH-AREA",
+          html: 
+          `<div>
+          <h3>Welcome!</h3>
+          <h3>Thanks for joining SHH-AREA, the area fpr sharing!!!</h3>
+          </div>`,
+        };
+        transporter.sendMail(details, (err) => {
+          if (err) {
+            console.log("There was an error sending email", err);
+          } else {
+            console.log("Email has been sent");
+          }
+        });
+      })
