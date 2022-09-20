@@ -1,12 +1,15 @@
-//get profgile
+const express = require("express");
+const router = express.Router();
+const User = require("../models/User.model");
+const Upload = require("../models/Upload.model");
+const Comment = require("../models/Comment.model");
+const uploadCloud = require("../config/cloudinary.config");
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 
-//edit profile
+router.get("/profile/:id", (req,res) => {
 
-//delete profile info
+})
 
-//get profile by ID
 
-//post on your profile
 
-//comment n like on other profiles
-
+module.exports = router;
