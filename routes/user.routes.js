@@ -32,21 +32,25 @@ router.post("/profile", (req,res) => {
 })
 
 router.get("/:id/details", (req,res) => {
-     console.log("We can See User Details");
+    console.log("We can See User Details");
     const {id} = req.params
     User.findById(id)
     .then(response => res.status(200).json(response))
     .catch((err) => console.log(err));  
- })
+})
 
-//     const {id} = req.body
-//     console.log('hello', id)
-//     User.findById(id)
-//     .then((response) => {
-//         console.log('resp', response)
-//         res.status(200).json(response)})
-//     .catch((err) => console.log(err))
-// })
+router.post("/:id/friends", (req,res) => {
+    console.log("processing friendship")
+    const {userId} = req.body
+    const {id} = req.params
+    console.log(userId, id, req.body)
+
+
+    User.updateOne({ _id : id }, {$push: {friends: [userId]}})
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err))
+})
+
 
 
 module.exports = router;
