@@ -43,14 +43,21 @@ router.post("/:id/friends", (req,res) => {
     console.log("processing friendship")
     const {userId} = req.body
     const {id} = req.params
-    console.log(userId, id, req.body)
-
-
-    User.updateOne({ _id : id }, {$push: {friends: [userId]}})
-    .then((response) => res.status(200).json(response))
-    .catch((err) => console.log(err))
-})
-
-
+    let counter = 0; 
+    console.log("counter ", counter)
+    User.findById(id)
+        .then(response =>{
+            console.log("the user that is found ", response)
+            response.friends.forEach(friend =>{ 
+                console.log("friend ,", friend, "counter ,", counter)
+                friend._id.toString() === userId ? counter++ : counter })
+            if(counter >0){return res.status(400).json("message: already liked")}
+            else{
+                User.updateOne({ _id : id }, {$push: {friends: [userId]}})
+                .then((response) => res.status(200).json(response))
+                .catch((err) => console.log(err));  
+            }
+            })
+        })
 
 module.exports = router;
