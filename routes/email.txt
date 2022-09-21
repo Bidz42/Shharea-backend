@@ -22,7 +22,7 @@ then .sendMail need to sed
           html: 
           `<div>
           <h3>Welcome!</h3>
-          <h3>Thanks for joining SHH-AREA, the area fpr sharing!!!</h3>
+          <h3>Thanks for joining SHH-AREA, the area for sharing!!!</h3>
           </div>`,
         };
         transporter.sendMail(details, (err) => {
