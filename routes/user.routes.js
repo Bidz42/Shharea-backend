@@ -10,7 +10,14 @@ const User = require("../models/User.model");
 router.get("/profile/:id", (req,res) => {
     const {id} = req.params;
     Upload.find()
-        .populate("comments likes")
+        .populate([
+            {path: "comments", model: "Comment",
+            populate:{
+                path:"owner", model:"User"
+            }
+            },
+            {path: "likes", model:"User"}
+        ])
         .then(response => response.filter(item => item.owner.toString() === id))
         .then(response => res.status(200).json(response) )
         .catch(err=> console.log(err));
