@@ -9,6 +9,7 @@ const userSchema = new Schema(
     image: String,
     location: String,
     info: String,
+    friends: [{ type: Schema.Types.ObjectId, ref: "User"}],
   },
   {
     timestamps: true
