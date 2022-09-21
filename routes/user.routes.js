@@ -24,11 +24,11 @@ router.post("/profile", (req,res) => {
     .catch((err) => console.log(err))
 })
 
-router.get("/details", (req,res) => {
-    const {id} = req.body
+router.get("/:id/details", (req,res) => {
+    const {id} = req.params
     User.findById(id)
-    .then((response) => res.status(200).json(response))
-    .catch((err) => console.log(err))
+    .then(response => res.status(200).json(response))
+    .catch((err) => console.log(err));
  })
 
 
