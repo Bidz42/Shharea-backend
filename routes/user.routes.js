@@ -25,15 +25,13 @@ router.post("/profile", (req,res) => {
 })
 
 router.get("/:id/details", (req,res) => {
-    console.log("We can See User Details");
+     console.log("We can See User Details");
     const {id} = req.params
     User.findById(id)
     .then(response => res.status(200).json(response))
     .catch((err) => console.log(err));  
  })
 
-
- 
 //     const {id} = req.body
 //     console.log('hello', id)
 //     User.findById(id)
