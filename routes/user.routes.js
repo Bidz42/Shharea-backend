@@ -46,7 +46,9 @@ router.post("/:id/friends", (req,res) => {
     let counter = 0; 
     console.log("counter ", counter)
     User.findById(id)
+
         .then(response =>{ response.friends.forEach(friend =>{ friend._id.toString() === userId ? counter++ : counter })
+
             if(counter >0){return res.status(400).json("message: already liked")}
             else{
                 User.updateOne({ _id : id }, {$push: {friends: [userId]}})
