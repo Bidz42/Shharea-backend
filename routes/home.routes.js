@@ -57,18 +57,36 @@ router.post(`/image/comment`, (req, res) =>{
 
 router.post(`/image/like`, (req, res) =>{
     const {userId, imageId} = req.body;
-    
-    Upload.updateOne( {_id : imageId}, {$push: {likes : [userId]}})
-    .then((response) => {res.status(200).json(response)})
-    .catch((err) => console.log(err))
+    let counter = 0
 
-
-
-
-    // Upload.create({comment, owner})
-    //     .then(response => { return Upload.updateOne( {_id : imageId}, {$push: {comments : [response._id]}})})
-    //     .then(response => {res.status(200).json(response)})
-    //     .catch((err) => console.log(err));
+    Upload.findById(imageId)
+    .then(response =>{ response.likes.forEach(like =>{ like._id.toString() === userId ? counter++ : counter })
+    if(counter >0){return res.status(400).json("message: already liked")}
+    else{
+        Upload.updateOne( {_id : imageId}, {$push: {likes : [userId]}})
+        .then((response) => {res.status(200).json(response)})
+        .catch((err) => console.log(err))
+    }
+    })
 });
+
+router.get("/search/upload", async function (req, res) {
+    Upload.find()
+        .then((response) => res.status(200).json(response))
+        .catch((err) => console.log(err))
+});
+
+router.get("/search/user", async function (req, res) {
+    User.find()
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err))
+});
+
+router.get("/search/comment", async function (req, res) {
+    Comment.find()
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err))
+});
+
 
 module.exports = router;
