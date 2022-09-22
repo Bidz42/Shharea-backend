@@ -72,6 +72,7 @@ router.post(`/image/like`, (req, res) =>{
 
 router.get("/search/upload", async function (req, res) {
     Upload.find()
+        .populate("owner comments tags")
         .then((response) => res.status(200).json(response))
         .catch((err) => console.log(err))
 });
