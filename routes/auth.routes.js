@@ -8,43 +8,68 @@ const User = require("../models/User.model");
 const nodemailer = require("nodemailer");
 
 router.post("/signup", (req, res) => {
-    const { name, username, email, password } = req.body;
-    console.log(req.body)
-  
-    const RegexTest= /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    if (!RegexTest.test(email)) {
-      res.status(400).json({ message: "Enter a valid email." });
-      return;
-    }
-    const RegexPasswordTest = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
-    if (!RegexPasswordTest.test(password)) {
-      res.status(400).json({ message: "Password must contain 6 characters with lowercase, uppercase and numbers"});
-      return;
-    } 
-    if (name === "" || username === "" || email === "" || password === "") {
-      res.status(400).json({ message: "Please enter your name, username, email and password" });
-      return;
-    }
-  
-    User.findOne({ email })
-        .then((existingUser) => {
-        if (existingUser) {res.status(400).json({ message: "User exists."})
+  const { name, username, email, password } = req.body;
+  console.log(req.body)
+
+  const RegexTest= /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if (!RegexTest.test(email)) {
+    res.status(400).json({ message: "Enter a valid email." });
+    return;
+  }
+  const RegexPasswordTest = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+  if (!RegexPasswordTest.test(password)) {
+    res.status(400).json({ message: "Password must contain 6 characters with lowercase, uppercase and numbers"});
+    return;
+  } 
+  if (name === "" || username === "" || email === "" || password === "") {
+    res.status(400).json({ message: "Please enter your name, username, email and password" });
+    return;
+  }
+  User.findOne({ email })
+      .then((existingUser) => {
+        if (existingUser) {
+          res.status(400).json({ message: "User exists."})
           return;
         }
-  
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashedPassword = bcrypt.hashSync(password, salt);
         return User.create({ name, username, email, password: hashedPassword });
-        })
-        .then((createdUser) => {
+      })
+      .then((createdUser) => {
         const { name, username, email, _id } = createdUser;
         const user = { name, username, email, _id };
         res.status(201).json({ user: user });
-        })
-        .catch((err) => {
+      })
+      .catch((err) => {
+        console.log(err)
         res.status(500).json({ message: "Internal Server Error, Please Investigate" })})
-        .catch((error) => console.log(error));
-    });
+      .then(async () => {
+        let transporter = nodemailer.createTransport({
+          service: "gmail",
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true, 
+          auth: {
+            user: "shharea.contact@gmail.com", 
+            pass: process.env.pass, 
+          },
+        });
+        let details = {
+          from: "shharea.contact@gmail.com",
+          to: email,
+          subject: "Welcome to SHH-AREA",
+          html: process.env.email ,
+        };
+        transporter.sendMail(details, (err) => {
+          if (err) {
+            console.log("There was an error sending email", err);
+          } else {
+            console.log("Email has been sent");
+          }
+        });
+      })
+      .catch((error) => console.log(error));
+  });
 
     
     
