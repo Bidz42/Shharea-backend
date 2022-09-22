@@ -41,6 +41,7 @@ router.get("/:id/details", (req,res) => {
 
 router.post("/:id/friends", (req,res) => {
     console.log("processing friendship")
+    
     const {userId} = req.body
     const {id} = req.params
     let counter = 0; 
