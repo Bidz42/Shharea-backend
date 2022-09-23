@@ -24,8 +24,16 @@ router.get("/profile/:id", (req,res) => {
 })
 
 router.post("/profile", (req,res) => {
-    const {userId, location, info} = req.body
-    User.updateOne({ _id : userId }, {$set: { location: location, info: info}})
+    console.log("Editing Profile")
+    const {userId, location, info, email, username} = req.body
+
+    const RegexTest= /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!RegexTest.test(email)) {
+      res.status(400).json({ message: "Enter a valid email." });
+      return;
+    }
+
+    User.updateOne({ _id : userId }, {$set: { location: location, info: info, email: email, username: username}})
     .then((response) => {return User.findById(userId) })
     .then((response) => res.status(200).json(response))
     .catch((err) => console.log(err))
@@ -41,7 +49,7 @@ router.get("/:id/details", (req,res) => {
 
 router.post("/:id/friends", (req,res) => {
     console.log("processing friendship")
-    
+
     const {userId} = req.body
     const {id} = req.params
     let counter = 0; 
