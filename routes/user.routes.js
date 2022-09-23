@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require("../models/User.model");
 // const Upload = require("../models/Upload.model");
 // const Comment = require("../models/Comment.model");
-// const uploadCloud = require("../config/cloudinary.config");
+const uploadCloud = require("../config/cloudinary.config");
 // const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 router.get("/profile/:id", (req,res) => {
@@ -23,9 +23,14 @@ router.get("/profile/:id", (req,res) => {
         .catch(err=> console.log(err));
 })
 
-router.post("/profile", (req,res) => {
+router.post("/profile", uploadCloud.single("image"), (req,res, next) => {
     console.log("Editing Profile")
     const {userId, location, info, email, username} = req.body
+    const image = req.file ? req.file.path : req.body.image;
+
+
+    // if(!req.file){next(new Error("no file uploaded!"))
+    //     return }
 
     const RegexTest= /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     if (!RegexTest.test(email)) {
@@ -33,7 +38,7 @@ router.post("/profile", (req,res) => {
       return;
     }
 
-    User.updateOne({ _id : userId }, {$set: { location: location, info: info, email: email, username: username}})
+    User.updateOne({ _id : userId }, {$set: { location: location, info: info, email: email, username: username, image: image}})
     .then((response) => {return User.findById(userId) })
     .then((response) => res.status(200).json(response))
     .catch((err) => console.log(err))

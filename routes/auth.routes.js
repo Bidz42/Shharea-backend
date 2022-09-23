@@ -8,7 +8,7 @@ const User = require("../models/User.model");
 const nodemailer = require("nodemailer");
 
 router.post("/signup", (req, res) => {
-  const { name, username, email, password } = req.body;
+  const { name, username, email, password, image } = req.body;
   console.log(req.body)
 
   const RegexTest= /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -33,7 +33,7 @@ router.post("/signup", (req, res) => {
         }
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashedPassword = bcrypt.hashSync(password, salt);
-        return User.create({ name, username, email, password: hashedPassword });
+        return User.create({ name, username, email, password: hashedPassword, image });
       })
       .then((createdUser) => {
         const { name, username, email, _id } = createdUser;
