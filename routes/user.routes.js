@@ -5,9 +5,9 @@ const User = require("../models/User.model");
 // const Upload = require("../models/Upload.model");
 // const Comment = require("../models/Comment.model");
 const uploadCloud = require("../config/cloudinary.config");
-// const { isAuthenticated } = require("../middleware/jwt.middleware");
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 
-router.get("/profile/:id", (req,res) => {
+router.get("/profile/:id", isAuthenticated, (req,res) => {
     const {id} = req.params;
     Upload.find()
         .populate([
@@ -44,7 +44,7 @@ router.post("/profile", uploadCloud.single("image"), (req,res, next) => {
     .catch((err) => console.log(err))
 })
 
-router.get("/:id/details", (req,res) => {
+router.get("/:id/details", isAuthenticated, (req,res) => {
     console.log("We can See User Details");
     const {id} = req.params
     User.findById(id)
