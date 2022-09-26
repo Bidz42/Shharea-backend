@@ -56,14 +56,14 @@ router.post(`/image/comment`, (req, res) =>{
 });
 
 router.post(`/image/like`, (req, res) =>{
-    const {userId, imageId} = req.body;
+    const {userId, id} = req.body;
     let counter = 0
 
-    Upload.findById(imageId)
-    .then(response =>{ response.likes.forEach(like =>{ like._id.toString() === userId ? counter++ : counter })
+    Upload.findById(id)
+    .then(response =>{ response?.likes?.forEach(like =>{ like._id.toString() === userId ? counter++ : counter })
     if(counter >0){return res.status(400).json("message: already liked")}
     else{
-        Upload.updateOne( {_id : imageId}, {$push: {likes : [userId]}})
+        Upload.updateOne( {_id : id}, {$push: {likes : [userId]}})
         .then((response) => {res.status(200).json(response)})
         .catch((err) => console.log(err))
     }
