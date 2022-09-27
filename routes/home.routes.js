@@ -25,14 +25,14 @@ router.post("/upload", uploadCloud.single("imageUrl"), (req, res, next) => {
     .catch(err => console.error(err))
 });
 
-router.get("/images", (req, res) => {
+router.get("/images", isAuthenticated, (req, res) => {
     Upload.find()
     .populate('owner')
     .then((response) => res.status(200).json(response))
     .catch((err) => console.log(err))
 })
 
-router.get("/image/:id", (req, res) => {
+router.get("/image/:id", isAuthenticated, (req, res) => {
     const {id} = req.params
     Upload.findById(id)
     .populate("owner likes")
@@ -56,38 +56,31 @@ router.post(`/image/comment`, (req, res) =>{
 });
 
 router.post(`/image/like`, (req, res) =>{
-    const {userId, imageId} = req.body;
+    const {userId, id} = req.body;
     let counter = 0
 
-    Upload.findById(imageId)
-    .then(response =>{ response.likes.forEach(like =>{ like._id.toString() === userId ? counter++ : counter })
+    Upload.findById(id)
+    .then(response =>{ response?.likes?.forEach(like =>{ like._id.toString() === userId ? counter++ : counter })
     if(counter >0){return res.status(400).json("message: already liked")}
     else{
-        Upload.updateOne( {_id : imageId}, {$push: {likes : [userId]}})
+        Upload.updateOne( {_id : id}, {$push: {likes : [userId]}})
         .then((response) => {res.status(200).json(response)})
         .catch((err) => console.log(err))
     }
     })
 });
 
-router.get("/search/upload", async function (req, res) {
+router.get("/search/upload", isAuthenticated, async function (req, res) {
     Upload.find()
         .populate("owner comments tags")
         .then((response) => res.status(200).json(response))
         .catch((err) => console.log(err))
 });
 
-router.get("/search/user", async function (req, res) {
+router.get("/search/user", isAuthenticated, async function (req, res) {
     User.find()
     .then((response) => res.status(200).json(response))
     .catch((err) => console.log(err))
 });
-
-router.get("/search/comment", async function (req, res) {
-    Comment.find()
-    .then((response) => res.status(200).json(response))
-    .catch((err) => console.log(err))
-});
-
 
 module.exports = router;

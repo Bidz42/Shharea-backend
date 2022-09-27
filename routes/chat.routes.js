@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const fetch = require('node-fetch');
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 const API_KEY='647ceaae485594d586fe7e24807854488102a968f9268fe87d0776f864fcdbd5'
 
@@ -39,7 +40,7 @@ const createRoom = (room) => {
     .catch((err) => console.log(err))
 }
 
-router.get("/room/:id", async function (req, res) {
+router.get("/room/:id", isAuthenticated, async function (req, res) {
     const roomId = req.params.id
     const room = await getRoom(roomId)
 
