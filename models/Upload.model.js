@@ -4,10 +4,10 @@ const uploadSchema = new Schema(
   {
     name: String,
     imageUrl: String,
-    owner: { type: Schema.Types.ObjectId, ref: "User"},
-    comments: [{ type: Schema.Types.ObjectId, ref: "Comment"}],
-    likes: [{ type: Schema.Types.ObjectId, ref: "User"}],
-    tags: []
+    owner: { type: Schema.Types.ObjectId, ref: "User" },
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+    likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    tags: [],
   },
   {
     timestamps: true,

@@ -6,89 +6,100 @@ const Comment = require("../models/Comment.model");
 const uploadCloud = require("../config/cloudinary.config");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
 
-
 router.post("/upload", uploadCloud.single("imageUrl"), (req, res, next) => {
-    const {owner, name} = req.body;
-    const tags = JSON.parse(req.body.tags);
-    const imageUrl = req.file.path;
-    console.log(owner, name, tags, imageUrl)
+  const { owner, name } = req.body;
+  const tags = JSON.parse(req.body.tags);
+  const imageUrl = req.file.path;
+  console.log(owner, name, tags, imageUrl);
 
-    if (!req.file) {
-      next(new Error("No file uploaded!"));
-      return;
-    }
-    Upload.create({name, imageUrl, tags, owner})
-    .then( (response) => {
-        console.log(response)
-         res.status(200).json({message: 'image uploaded'})
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+  Upload.create({ name, imageUrl, tags, owner })
+    .then((response) => {
+      console.log(response);
+      res.status(200).json({ message: "image uploaded" });
     })
-    .catch(err => console.error(err))
+    .catch((err) => console.error(err));
 });
 
 router.get("/images", isAuthenticated, (req, res) => {
-    Upload.find()
-    .populate('owner')
+  Upload.find()
+    .populate("owner")
     .then((response) => res.status(200).json(response))
-    .catch((err) => console.log(err))
-})
-
-router.get("/image/:id", isAuthenticated, (req, res) => {
-    const {id} = req.params
-    Upload.findById(id)
-    .populate("owner likes")
-    .populate({
-        path: "comments",
-        populate: {
-            path: "owner", 
-            model: "User",
-        }
-        })
-    .then((response) => res.status(200).json(response))
-    .catch((err) => console.log(err))
-})
-
-router.post(`/image/comment`, (req, res) =>{
-    const {comment, owner, imageId} = req.body;
-    Comment.create({comment, owner})
-        .then(response => { return Upload.updateOne( {_id : imageId}, {$push: {comments : [response._id]}})})
-        .then(response => {res.status(200).json(response)})
-        .catch((err) => console.log(err));
+    .catch((err) => console.log(err));
 });
 
-router.post(`/image/like`, (req, res) =>{
-    const {userId, id} = req.body;
-    let counter = 0
-
-    Upload.findById(id)
-    .then(response =>{ response?.likes?.forEach(like =>{ like._id.toString() === userId ? counter++ : counter })
-    if(counter >0){return res.status(400).json("message: already liked")}
-    else{
-        Upload.updateOne( {_id : id}, {$push: {likes : [userId]}})
-        .then((response) => {res.status(200).json(response)})
-        .catch((err) => console.log(err))
-    }
+router.get("/image/:id", isAuthenticated, (req, res) => {
+  const { id } = req.params;
+  Upload.findById(id)
+    .populate("owner likes")
+    .populate({
+      path: "comments",
+      populate: {
+        path: "owner",
+        model: "User",
+      },
     })
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err));
+});
+
+router.post(`/image/comment`, (req, res) => {
+  const { comment, owner, imageId } = req.body;
+  Comment.create({ comment, owner })
+    .then((response) => {
+      return Upload.updateOne(
+        { _id: imageId },
+        { $push: { comments: [response._id] } }
+      );
+    })
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((err) => console.log(err));
+});
+
+router.post(`/image/like`, (req, res) => {
+  const { userId, id } = req.body;
+  let counter = 0;
+
+  Upload.findById(id).then((response) => {
+    response?.likes?.forEach((like) => {
+      like._id.toString() === userId ? counter++ : counter;
+    });
+    if (counter > 0) {
+      return res.status(400).json("message: already liked");
+    } else {
+      Upload.updateOne({ _id: id }, { $push: { likes: [userId] } })
+        .then((response) => {
+          res.status(200).json(response);
+        })
+        .catch((err) => console.log(err));
+    }
+  });
 });
 
 router.get("/search/upload", isAuthenticated, async function (req, res) {
-    Upload.find()
-        .populate("owner comments tags")
-        .then((response) => res.status(200).json(response))
-        .catch((err) => console.log(err))
+  Upload.find()
+    .populate("owner comments tags")
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err));
 });
 
 router.get("/search/user", isAuthenticated, async function (req, res) {
-    User.find()
+  User.find()
     .then((response) => res.status(200).json(response))
-    .catch((err) => console.log(err))
+    .catch((err) => console.log(err));
 });
 
-router.delete("/image/:id", isAuthenticated, (req,res) => {
-    const {id} = req.params
-    console.log(req.params, 'i am deleting')
-    Upload.findByIdAndDelete(id)
+router.delete("/image/:id", isAuthenticated, (req, res) => {
+  const { id } = req.params;
+  console.log(req.params, "i am deleting");
+  Upload.findByIdAndDelete(id)
     .then((response) => res.status(200).json(response))
-    .catch((err) => console.log(err))
-})
+    .catch((err) => console.log(err));
+});
 
 module.exports = router;
