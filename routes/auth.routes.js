@@ -105,7 +105,6 @@ router.post("/signup", (req, res) => {
         });
       
         router.get("/verify", isAuthenticated, (req, res) => {
-            console.log(`req.payload`, req.payload);
             res.status(200).json(req.payload);
         });
       
