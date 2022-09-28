@@ -83,4 +83,12 @@ router.get("/search/user", isAuthenticated, async function (req, res) {
     .catch((err) => console.log(err))
 });
 
+router.delete("/image/:id", isAuthenticated, (req,res) => {
+    const {id} = req.params
+    console.log(req.params, 'i am deleting')
+    Upload.findByIdAndDelete(id)
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err))
+})
+
 module.exports = router;
