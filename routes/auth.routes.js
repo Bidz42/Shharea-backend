@@ -62,7 +62,7 @@ router.post("/signup", (req, res) => {
         .json({ message: "Internal Server Error, Please Investigate" });
     })
     .then(async () => {
-      console.log( )
+      console.log("Sending Mail Now" )
 
 
       let transporter = await nodemailer.createTransport({
