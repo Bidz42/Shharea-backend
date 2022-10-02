@@ -55,13 +55,8 @@ router.post("/signup", (req, res) => {
       const user = { name, username, email, _id };
       res.status(201).json({ user: user });
     })
-    .catch((err) => {
-      console.log(err);
-      res
-        .status(500)
-        .json({ message: "Internal Server Error, Please Investigate" });
-    })
     .then(async () => {
+
       console.log("Sending Mail Now" )
 
 
