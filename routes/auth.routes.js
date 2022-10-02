@@ -50,17 +50,15 @@ router.post("/signup", (req, res) => {
       });
     })
     .then((createdUser) => {
-      console.log("Is this the Created User? ", createdUser)
+      console.log("Here is the New Created User ", createdUser)
       const { name, username, email, _id } = createdUser;
       const user = { name, username, email, _id };
       res.status(201).json({ user: user });
     })
-    .then(async () => {
-
+    .then(() => {
       console.log("Sending Mail Now" )
 
-
-      let transporter = await nodemailer.createTransport({
+      let transporter =  nodemailer.createTransport({
         service: "gmail",
         host: "smtp.gmail.com",
         port: 465,
@@ -70,18 +68,19 @@ router.post("/signup", (req, res) => {
           pass: process.env.pass,
         },
       });
-     
-      let details = await {
+    
+      let details =  {
         from: "shharea.contact@gmail.com",
         to: email,
         subject: "Welcome to SHH-AREA", 
-        html: `<h1> Hi There </h1>`
-
-
-
+        html: `
+        <div>
+          <h1> Hi There </h1>
+        </div>
+        `
       };
 
-      await transporter.sendMail(details, (err) => {
+       transporter.sendMail(details, (err) => {
         if (err) {
           console.log("There was an error sending email", err);
         } else {
