@@ -30,11 +30,8 @@ router.post("/profile", uploadCloud.single("image"), (req, res, next) => {
   console.log("Editing Profile");
   const { userId, location, info, email, username } = req.body;
   const image = req.file ? req.file.path : req.body.image;
-
-  // if(!req.file){next(new Error("no file uploaded!"))
-  //     return }
-
   const RegexTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  
   if (!RegexTest.test(email)) {
     res.status(400).json({ message: "Enter a valid email." });
     return;
@@ -56,7 +53,33 @@ router.post("/profile", uploadCloud.single("image"), (req, res, next) => {
       return User.findById(userId);
     })
     .then((response) => res.status(200).json(response))
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err))
+    // .then(async () => {
+    //   let transporter = nodemailer.createTransport({
+    //     service: "gmail",
+    //     host: "smtp.gmail.com",
+    //     port: 465,
+    //     secure: true,
+    //     auth: {
+    //       user: "shharea.contact@gmail.com",
+    //       pass: process.env.pass,
+    //     },
+    //   });
+    //   let details = {
+    //     from: "shharea.contact@gmail.com",
+    //     to: email,
+    //     subject: "Your SHH-AREA update",
+    //     html: process.env.update_email,
+    //   };
+    //   transporter.sendMail(details, (err) => {
+    //     if (err) {
+    //       console.log("There was an error sending email", err);
+    //     } else {
+    //       console.log("Email has been sent");
+    //     }
+    //   });
+    // })
+    // .catch((error) => console.log(error));
 });
 
 router.get("/:id/details", isAuthenticated, (req, res) => {
@@ -67,27 +90,27 @@ router.get("/:id/details", isAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.post("/:id/friends", (req, res) => {
-  console.log("processing friendship");
+// router.post("/:id/friends", (req, res) => {
+//   console.log("processing friendship");
 
-  const { userId } = req.body;
-  const { id } = req.params;
-  let counter = 0;
-  console.log("counter ", counter);
-  User.findById(id)
-  .then((response) => {
-    response.friends.forEach((friend) => {
-      friend._id.toString() === userId ? counter++ : counter;
-    });
+//   const { userId } = req.body;
+//   const { id } = req.params;
+//   let counter = 0;
+//   console.log("counter ", counter);
+//   User.findById(id)
+//   .then((response) => {
+//     response.friends.forEach((friend) => {
+//       friend._id.toString() === userId ? counter++ : counter;
+//     });
 
-    if (counter > 0) {
-      return res.status(400).json("message: already liked");
-    } else {
-      User.updateOne({ _id: id }, { $push: { friends: [userId] } })
-        .then((response) => res.status(200).json(response))
-        .catch((err) => console.log(err));
-    }
-  });
-});
+//     if (counter > 0) {
+//       return res.status(400).json("message: already liked");
+//     } else {
+//       User.updateOne({ _id: id }, { $push: { friends: [userId] } })
+//         .then((response) => res.status(200).json(response))
+//         .catch((err) => console.log(err));
+//     }
+//   });
+// });
 
 module.exports = router;

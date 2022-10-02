@@ -133,9 +133,7 @@ router.post("/login", (req, res) => {
       }
     })
     .catch((err) =>
-      res
-        .status(500)
-        .json({ message: "Internal Server Error, Please Investigate" })
+      res.status(500).json({ message: "Server Error" })
     );
 });
 
