@@ -76,7 +76,7 @@ router.post("/signup", (req, res) => {
         from: "shharea.contact@gmail.com",
         to: email,
         subject: "Welcome to SHH-AREA", 
-        amp: `<!doctype html>
+        html: `<!doctype html>
         <html ⚡4email>
           <head>
             <meta charset="utf-8">
