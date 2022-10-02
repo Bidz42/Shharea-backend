@@ -62,7 +62,10 @@ router.post("/signup", (req, res) => {
         .json({ message: "Internal Server Error, Please Investigate" });
     })
     .then(async () => {
-      let transporter = nodemailer.createTransport({
+      console.log( )
+
+
+      let transporter = await nodemailer.createTransport({
         service: "gmail",
         host: "smtp.gmail.com",
         port: 465,
@@ -72,7 +75,8 @@ router.post("/signup", (req, res) => {
           pass: process.env.pass,
         },
       });
-      let details = {
+     
+      let details = await {
         from: "shharea.contact@gmail.com",
         to: email,
         subject: "Welcome to SHH-AREA", 
@@ -81,13 +85,16 @@ router.post("/signup", (req, res) => {
 
 
       };
-      transporter.sendMail(details, (err) => {
+
+      await transporter.sendMail(details, (err) => {
         if (err) {
           console.log("There was an error sending email", err);
         } else {
           console.log("Email has been sent");
         }
       });
+
+
     })
     .catch((error) => console.log(error));
 });
