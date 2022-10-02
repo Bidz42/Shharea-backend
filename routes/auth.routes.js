@@ -9,7 +9,6 @@ const nodemailer = require("nodemailer");
 
 router.post("/signup", (req, res) => {
   const { name, username, email, password, image } = req.body;
-  console.log(req.body);
 
   const RegexTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   if (!RegexTest.test(email)) {
@@ -51,6 +50,7 @@ router.post("/signup", (req, res) => {
       });
     })
     .then((createdUser) => {
+      console.log("Is this the Created User? ", createdUser)
       const { name, username, email, _id } = createdUser;
       const user = { name, username, email, _id };
       res.status(201).json({ user: user });
