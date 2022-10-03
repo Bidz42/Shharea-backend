@@ -30,6 +30,7 @@ router.post("/signup", (req, res) => {
         to: email,
         subject: "Welcome to SHH-AREA", 
         html: `
+
         <div style="
           display: flex; 
           flex-direction: column; 
@@ -42,7 +43,7 @@ router.post("/signup", (req, res) => {
 
           <h1 style="color: #0CD3FC; text-align:center;">WELCOME</h1>
           <p style="font-size: 22px;">We're excited to have you here. We know you need an area to share, so, welcome to SHH-AREA </p>
-          <button style="border: none; border-radius: 5%; background-color:#F06FCB; padding: 3%; margin: 0 auto;"> <a href='https://shh-area.netlify.app/' style="text-decoration: none; ">Take me There!</a></button>
+          <button style="border: none; border-radius: 5%; background-color:#F06FCB; padding: 3%; margin: 0 auto;"> <a href='https://shh-area.netlify.app/' target="_blank" style="text-decoration: none; ">Take me There!</a></button>
 
           <p style="font-style:italic; text-align: center;">If that doesn't work, copy and paste the following link in your browser: </p>
           <p style="color: #F06FCB; text-align: center;">https://shh-area.netlify.app</p>
@@ -51,7 +52,9 @@ router.post("/signup", (req, res) => {
 
           <p style="font-weight: 800;">Cheers, The SHH-AREA team</p>
 
-        </div>`
+        </div>
+        
+        `
 
       };
 
