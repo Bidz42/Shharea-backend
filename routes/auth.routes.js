@@ -55,8 +55,9 @@ router.post("/signup", (req, res) => {
       const user = { name, username, email, _id };
       res.status(201).json({ user: user });
     })
-    .then(() => {
+    .then( response => {
       console.log("Sending Mail Now" )
+      console.log("Mail Selected: ", response.email )
 
       let transporter =  nodemailer.createTransport({
         service: "gmail",
@@ -73,11 +74,7 @@ router.post("/signup", (req, res) => {
         from: "shharea.contact@gmail.com",
         to: email,
         subject: "Welcome to SHH-AREA", 
-        html: `
-        <div>
-          <h1> Hi There </h1>
-        </div>
-        `
+        text: "wow this is an email"
       };
 
        transporter.sendMail(details, (err) => {
