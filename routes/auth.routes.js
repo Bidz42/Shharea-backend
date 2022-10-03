@@ -12,14 +12,16 @@ router.post("/signup", (req, res) => {
 
   const mailer = () =>{
       console.log("Sending Mail Now" )
-      console.log("Mail Selected: ", response.email )
+      console.log("Mail Selected: ", email )
 
       let transporter =  nodemailer.createTransport({
         service: "gmail",
         host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
         auth: {
           user: "shharea.contact@gmail.com",
-          pass: process.env.pass,
+          pass: "udaonhodxwhktmyw",
         },
       });
 
@@ -27,7 +29,7 @@ router.post("/signup", (req, res) => {
         from: "shharea.contact@gmail.com",
         to: email,
         subject: "Welcome to SHH-AREA", 
-        text: "wow this is an email"
+        html: "wow this is an email"
       };
 
       transporter.sendMail(details, (err) => {
@@ -86,7 +88,7 @@ router.post("/signup", (req, res) => {
       console.log("Here is the New Created User ", createdUser)
       const { name, username, email, _id } = createdUser;
       const user = { name, username, email, _id };
-      mailer()
+      mailer();
       res.status(201).json({ user: user });
     })
     .catch(err => console.log(err))
