@@ -30,7 +30,7 @@ router.post("/signup", (req, res) => {
         to: email,
         subject: "Welcome to SHH-AREA", 
         html: `
-        <div style="background-color:#4c4a4a; color: white; padding: 0% 20%;">
+        <div style="background-color:#4c4a4a; color: white; padding: 0% 20%; border-radius: 5%">
         <h1 style="color: #0CD3FC; text-align:center;">WELCOME</h1>
         <p style="font-size: 22px;">We're excited to have you here. We know you need an area to share, so, welcome to SHH-AREA </p>
         <button style="border: none; border-radius: 5%; background-color:#F06FCB; padding: 3%; margin: 0 40%"> <a href='https://shh-area.netlify.app/' target="_blank" style="text-decoration: none; ">Take me There!</a></button>
