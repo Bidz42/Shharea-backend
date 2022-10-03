@@ -29,7 +29,7 @@ router.post("/signup", (req, res) => {
         from: "shharea.contact@gmail.com",
         to: email,
         subject: "Welcome to SHH-AREA", 
-        html: "wow this is an email"
+        html: `<p>wow this is an email </p>`
       };
 
       transporter.sendMail(details, (err) => {
@@ -40,6 +40,8 @@ router.post("/signup", (req, res) => {
       }
     });
 
+
+    console.log("Mail Function End")
     }
 
 
