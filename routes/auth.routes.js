@@ -10,6 +10,39 @@ const nodemailer = require("nodemailer");
 router.post("/signup", (req, res) => {
   const { name, username, email, password, image } = req.body;
 
+  const mailer = () =>{
+      console.log("Sending Mail Now" )
+      console.log("Mail Selected: ", response.email )
+
+      let transporter =  nodemailer.createTransport({
+        service: "gmail",
+        host: "smtp.gmail.com",
+        auth: {
+          user: "shharea.contact@gmail.com",
+          pass: process.env.pass,
+        },
+      });
+
+      let details =  {
+        from: "shharea.contact@gmail.com",
+        to: email,
+        subject: "Welcome to SHH-AREA", 
+        text: "wow this is an email"
+      };
+
+      transporter.sendMail(details, (err) => {
+      if (err) {
+        console.log("There was an error sending email", err);
+      } else {
+        console.log("Email has been sent");
+      }
+    });
+
+    }
+
+
+
+
   const RegexTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   if (!RegexTest.test(email)) {
     res.status(400).json({ message: "Enter a valid email." });
@@ -53,41 +86,15 @@ router.post("/signup", (req, res) => {
       console.log("Here is the New Created User ", createdUser)
       const { name, username, email, _id } = createdUser;
       const user = { name, username, email, _id };
+      mailer()
       res.status(201).json({ user: user });
     })
-    .then( response => {
-      console.log("Sending Mail Now" )
-      console.log("Mail Selected: ", response.email )
+    .catch(err => console.log(err))
 
-      let transporter =  nodemailer.createTransport({
-        service: "gmail",
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-          user: "shharea.contact@gmail.com",
-          pass: process.env.pass,
-        },
-      });
+
+
     
-      let details =  {
-        from: "shharea.contact@gmail.com",
-        to: email,
-        subject: "Welcome to SHH-AREA", 
-        text: "wow this is an email"
-      };
 
-       transporter.sendMail(details, (err) => {
-        if (err) {
-          console.log("There was an error sending email", err);
-        } else {
-          console.log("Email has been sent");
-        }
-      });
-
-
-    })
-    .catch((error) => console.log(error));
 });
 
 router.post("/login", (req, res) => {
